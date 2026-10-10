@@ -1,0 +1,13 @@
+MOCHI ISLAND — COMPLETE FIXED PROJECT
+
+IMPORTANT: Do not upload this ZIP file itself and expect GitHub to extract it.
+
+1. Extract this ZIP on your computer.
+2. Open the extracted folder. It contains package.json, app.js, index.html, src-tauri, scripts, public, and .github.
+3. In your GitHub repository, choose Add file -> Upload files.
+4. Upload/drag the extracted CONTENTS into the repository root (not the ZIP file). Keep folder paths.
+5. Commit changes. GitHub Actions should start building on push.
+6. Open Actions, wait for the run, then download the Mochi-Island-Windows-Installers artifact.
+
+This package includes src-tauri/icons/icon.ico and the fixed Tauri backgroundColor string.
+A successful build is not guaranteed until GitHub Actions runs; any new compile error will appear in the Actions log.
