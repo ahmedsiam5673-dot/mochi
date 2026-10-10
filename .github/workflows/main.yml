@@ -3,9 +3,7 @@ name: Build Mochi Island for Windows
 on:
   workflow_dispatch:
   push:
-    paths:
-      - 'mochi-island-desktop.zip'
-      - '.github/workflows/build-windows.yml'
+    branches: [main, master]
 
 permissions:
   contents: read
@@ -18,20 +16,46 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
 
-      - name: Extract project ZIP on the hosted runner
+      - name: Locate project source or ZIP
+        id: locate
         shell: pwsh
         run: |
-          $archive = Join-Path $env:GITHUB_WORKSPACE 'mochi-island-desktop.zip'
-          if (-not (Test-Path -LiteralPath $archive)) {
-            throw 'Upload mochi-island-desktop.zip to the repository root first.'
+          $workspace = $env:GITHUB_WORKSPACE
+          $project = $null
+
+          # Prefer the source files already uploaded directly to the repository root.
+          if ((Test-Path (Join-Path $workspace 'package.json')) -and
+              (Test-Path (Join-Path $workspace 'src-tauri\Cargo.toml'))) {
+            $project = $workspace
           }
-          $extractRoot = Join-Path $env:RUNNER_TEMP 'mochi-source'
-          Expand-Archive -LiteralPath $archive -DestinationPath $extractRoot -Force
-          $project = Join-Path $extractRoot 'mochi-island-desktop'
-          if (-not (Test-Path -LiteralPath (Join-Path $project 'package.json'))) {
-            throw 'Could not find package.json inside the project ZIP. Make sure you uploaded the original project ZIP.'
+
+          # Otherwise, locate and extract the project's ZIP anywhere in the repository.
+          if (-not $project) {
+            $archives = @(Get-ChildItem -Path $workspace -Filter 'mochi-island-desktop.zip' -Recurse -File |
+              Where-Object { $_.FullName -notmatch '[\\/]\.git[\\/]' } |
+              Sort-Object { $_.FullName.Length })
+
+            if ($archives.Count -gt 0) {
+              $extractRoot = Join-Path $env:RUNNER_TEMP 'mochi-source'
+              New-Item -ItemType Directory -Path $extractRoot -Force | Out-Null
+              Expand-Archive -LiteralPath $archives[0].FullName -DestinationPath $extractRoot -Force
+              $packageFiles = Get-ChildItem -Path $extractRoot -Filter 'package.json' -Recurse -File
+              foreach ($packageFile in $packageFiles) {
+                $candidate = $packageFile.Directory.FullName
+                if (Test-Path (Join-Path $candidate 'src-tauri\Cargo.toml')) {
+                  $project = $candidate
+                  break
+                }
+              }
+            }
           }
-          "MOCHI_PROJECT=$project" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+          if (-not $project) {
+            throw 'Project source not found. Upload the project source files (package.json and src-tauri/Cargo.toml) to the repository root, or add mochi-island-desktop.zip.'
+          }
+
+          "project_path=$project" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          Write-Host "Building project at: $project"
 
       - name: Set up Node.js
         uses: actions/setup-node@v6
@@ -43,18 +67,18 @@ jobs:
 
       - name: Install frontend dependencies
         shell: pwsh
+        working-directory: ${{ steps.locate.outputs.project_path }}
         run: npm install
-        working-directory: ${{ env.MOCHI_PROJECT }}
 
       - name: Build Windows installers
         shell: pwsh
+        working-directory: ${{ steps.locate.outputs.project_path }}
         run: npm run tauri:build
-        working-directory: ${{ env.MOCHI_PROJECT }}
 
       - name: Upload Windows installers
         uses: actions/upload-artifact@v7
         with:
           name: Mochi-Island-Windows-Installers
-          path: ${{ runner.temp }}/mochi-source/mochi-island-desktop/src-tauri/target/release/bundle/
+          path: ${{ steps.locate.outputs.project_path }}/src-tauri/target/release/bundle/
           if-no-files-found: error
           retention-days: 14
