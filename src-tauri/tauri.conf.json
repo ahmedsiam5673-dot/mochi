@@ -26,7 +26,7 @@
         "alwaysOnTop": true,
         "skipTaskbar": true,
         "shadow": false,
-        "backgroundColor": { "r": 0, "g": 0, "b": 0, "a": 0 }
+        "backgroundColor": "#00000000"
       }
     ],
     "security": {
@@ -35,12 +35,18 @@
   },
   "bundle": {
     "active": true,
-    "targets": ["nsis", "msi"],
+    "targets": [
+      "nsis",
+      "msi"
+    ],
     "shortDescription": "Your personal liquid-glass desktop companion",
     "longDescription": "A customizable desktop island with a custom mascot, AI chat, local agent hook monitoring and personal integrations.",
     "category": "Productivity",
     "windows": {
-      "nsis": { "displayLanguageSelector": false, "installMode": "currentUser" }
+      "nsis": {
+        "displayLanguageSelector": false,
+        "installMode": "currentUser"
+      }
     }
   }
 }
