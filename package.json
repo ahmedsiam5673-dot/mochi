@@ -1,0 +1,18 @@
+{
+  "name": "mochi-island-desktop",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A personal liquid-glass desktop companion with a custom mascot, chat and AI-agent hook monitoring.",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "tauri": "tauri",
+    "tauri:dev": "tauri dev",
+    "tauri:build": "tauri build"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.8.4",
+    "vite": "^7.1.7"
+  }
+}

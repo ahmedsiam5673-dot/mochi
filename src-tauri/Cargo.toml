@@ -1,0 +1,16 @@
+[package]
+name = "mochi-island"
+version = "1.0.0"
+description = "Mochi Island desktop companion"
+authors = ["Mochi Island contributors"]
+edition = "2021"
+
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+uuid = { version = "1", features = ["v4"] }
