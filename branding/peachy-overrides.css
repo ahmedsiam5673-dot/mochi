@@ -1,0 +1,34 @@
+/* Peachy Island skin: original Coucou behaviour is kept; this file only skins the UI. */
+:root {
+  --ink: #f8f8ff;
+  --ink-2: #f1f2ff;
+  --dim: #b7c3e8;
+  --dim-2: #aab7e7;
+  --dim-3: #8290c8;
+  --dim-4: #6c78ad;
+  --dim-5: #515f95;
+  --card: rgba(16, 27, 78, .72);
+  --card-flat: rgba(10, 18, 56, .76);
+  --tab-on: rgba(97, 132, 255, .28);
+  --hairline: rgba(177, 204, 255, .22);
+  --indigo: #687dff;
+  --cyan: #42d7ff;
+  --pink: #ff91c8;
+  --amber: #ffb46b;
+}
+html, body { background: transparent !important; }
+#island {
+  background: linear-gradient(125deg, rgba(15, 44, 105, .94), rgba(37, 38, 112, .91) 58%, rgba(65, 36, 130, .91)) !important;
+  border: 1px solid rgba(150, 194, 255, .72);
+  border-top-color: rgba(178, 211, 255, .88);
+  border-radius: 0 0 23px 23px !important;
+  box-shadow: 0 0 0 1px rgba(100, 151, 255, .12), 0 0 28px rgba(50, 128, 255, .30), 0 0 46px rgba(160, 75, 255, .18), inset 0 1px rgba(255,255,255,.12);
+  -webkit-backdrop-filter: blur(28px) saturate(145%);
+  backdrop-filter: blur(28px) saturate(145%);
+}
+#island-clip { border-radius: inherit !important; background: linear-gradient(130deg, rgba(44, 89, 174, .22), rgba(48, 47, 130, .22)); }
+.card { background: rgba(9, 18, 57, .56) !important; border-color: rgba(157, 190, 255, .19) !important; box-shadow: inset 0 1px rgba(255,255,255,.045); }
+.btn.secondary, .pill, .tab.on { background: rgba(109, 143, 255, .15) !important; border-color: rgba(167, 198, 255, .25) !important; }
+.btn.primary { background: linear-gradient(120deg, #7bdfff, #c6b7ff) !important; color: #10173d !important; }
+.tab:hover, .header-actions button:hover { color: #fff !important; }
+#bot-glow { background: rgba(103, 147, 255, .32) !important; }
